@@ -87,11 +87,20 @@ time.sleep(1)
 
 search_button = driver.find_element(By.XPATH, '//*[@id="btnSearch"]')
 search_button.click()
-time.sleep(10)
+time.sleep(5)
 
 page_span = driver.find_element(By.XPATH, '//span[contains(@class, "ng-binding") and contains(@style, "1%")]')
 # print(page_span.text)
 
+# Find the <ul> element with class attribute "pagination"
+pagination_ul = driver.find_element(By.CLASS_NAME, 'pagination') # the same as (By.CSS_SELECTORS, 'ul.pagination')
 
-pagination_lis = driver.find_elements(By.XPATH, '//ul[@class="pagination"]/li')
-print(len(pagination_lis))
+# Find all the <li> elements inside the <ul> element
+pagination_lis = pagination_ul.find_elements(By.TAG_NAME, 'li')
+
+a = driver.find_element(By.CSS_SELECTOR, 'ul.pagination li:nth-child('+f"{len(pagination_lis) - 2}" + ') a')
+a.click()
+time.sleep(4)
+# for i in range(4):
+#     time.sleep(3)
+#     pagination_lis[len(pagination_lis) - 2].click()
