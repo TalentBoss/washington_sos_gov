@@ -72,7 +72,6 @@ filter_button.click()
 time.sleep(5)
 
 advanced_search_buttons = driver.find_elements(By.CLASS_NAME, 'btn-advdSearch')
-print(len(advanced_search_buttons))
 advanced_search_buttons[0].click()
 time.sleep(5)
 
@@ -98,9 +97,45 @@ pagination_ul = driver.find_element(By.CLASS_NAME, 'pagination') # the same as (
 # Find all the <li> elements inside the <ul> element
 pagination_lis = pagination_ul.find_elements(By.TAG_NAME, 'li')
 
-a = driver.find_element(By.CSS_SELECTOR, 'ul.pagination li:nth-child('+f"{len(pagination_lis) - 2}" + ') a')
+a = driver.find_element(By.CSS_SELECTOR, 'ul.pagination li:nth-child('+f"{len(pagination_lis) - 1}" + ') a')
 a.click()
 time.sleep(4)
+a.click()
+time.sleep(4)
+
+# WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='newsletter_popup_close-cta']"))).click()
+# print([my_elem.get_attribute("href") for my_elem in WebDriverWait(driver, 20).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "a.core[data-brand='Always'][href]")))])
+
+table_element = driver.find_element(By.CLASS_NAME, 'table-responsive')
+table_trs = driver.find_elements(By.CSS_SELECTOR, 'table.table-responsive tbody tr')
+for j in range(1, len(table_trs)-1):
+    # wait = WebDriverWait(driver,60)
+    # succeed = False
+    # while not succeed:
+    #     try:
+    #         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'table.table-responsive tbody tr:nth-child(' + f"{j}" + ') td a'))).click()
+    #         succeed = True
+    #     except:
+    #         pass
+
+    table_td = driver.find_elements(By.CSS_SELECTOR, 'table.table-responsive tbody tr:nth-child(' + f"{j}" + ') td')
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'table.table-responsive tbody tr:nth-child(' + f"{j}" + ') td')))
+    table_a = table_td.find_element(By.TAG_NAME, 'a')
+    
+    # table_a.click()
+    driver.execute_script("arguments[0].ng-click();", table_a)
+
+    print(table_a.text)
+    time.sleep(5)
+    # history_btn = driver.find_element(By.ID, 'btnFilingHistory')
+    # history_btn.click()
+
+    # pdf_table = driver.find_element(By.CLASS_NAME, 'table-striped')
+    # pdf_table_tbody = driver.find_elements(By.CSS_SELECTOR, 'table.table-striped tbody')[0]
+    # pdf_table_trs = pdf_table_tbody.find_elements(By.CSS_SELECTOR, 'tr')
+    # print(len(pdf_table_trs))
+    # driver.back()
+
 # for i in range(4):
 #     time.sleep(3)
 #     pagination_lis[len(pagination_lis) - 2].click()
