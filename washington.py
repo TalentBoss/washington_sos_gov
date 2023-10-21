@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 import csv
 from datetime import datetime, timedelta
-
+import re
 
 # import fitz 
 # doc = fitz.open('a.pdf') 
@@ -19,29 +19,11 @@ from datetime import datetime, timedelta
 
 
 
-# from PyPDF2 import PdfReader
-# import glob
-# import os
+from PyPDF2 import PdfReader
+import glob
+import os
 
-# list_of_files = glob.glob('C:/Users/Administrator/Downloads/*') # * means all if need specific format then *.csv
-# latest_file = max(list_of_files, key=os.path.getctime)
-# # print(len(list_of_files))
-# print(latest_file)
 
- 
-  
-# # creating a pdf reader object 
-# reader = PdfReader(latest_file) 
-  
-# # printing number of pages in pdf file 
-# print(len(reader.pages)) 
-  
-# # getting a specific page from the pdf file 
-# page = reader.pages[0] 
-  
-# # extracting text from page 
-# text = page.extract_text() 
-# print(text) 
 
 
 def convert_to_standard_date_format():
@@ -49,6 +31,23 @@ def convert_to_standard_date_format():
     one_day_before = current_date - timedelta(days=1)
     formatted_date = one_day_before.strftime("%m/%d/%Y")
     return formatted_date
+
+def is_contains_number(string):
+    pattern = r'\d'  # regular expression pattern for any digit
+
+    if re.search(pattern, string):
+        return True
+    else:
+        return False
+    
+def is_email_format(string):
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'  # regular expression pattern for email format
+
+    if re.match(pattern, string):
+        return True
+    else:
+        return False
+
 
 # configure webdriver
 options = Options()
@@ -128,14 +127,72 @@ try:
     view_pdf_a.click()
     time.sleep(4)
     
-    final_pdf_table_tbody = pdf_table[1].find_element(By.CSS_SELECTOR, 'tbody')
-    final_pdf_table_trs = final_pdf_table_tbody.find_elements(By.CSS_SELECTOR, 'tr')
+    final_pdf_table_tbodies = pdf_table[1].find_elements(By.CSS_SELECTOR, 'tbody')
+    final_pdf_table_trs = final_pdf_table_tbodies[len(final_pdf_table_tbodies) - 2].find_elements(By.CSS_SELECTOR, 'tr')
     final_pdf_table_tds = final_pdf_table_trs[len(final_pdf_table_trs) - 1].find_elements(By.CSS_SELECTOR, 'td')
-    final_pdf_table_i = final_pdf_table_tds[0].find_element(By.TAG_NAME, 'i')
-    print(final_pdf_table_tds[0].text)
-    # time.sleep(2)
+    final_pdf_table_i = final_pdf_table_tds[len(final_pdf_table_tds) - 1].find_element(By.TAG_NAME, 'i')
+    time.sleep(2)
     final_pdf_table_i.click()
     time.sleep(4)
+    
+    
+    list_of_files = glob.glob('C:/Users/Christian/Downloads/*') # * means all if need specific format then *.csv
+    latest_file = max(list_of_files, key=os.path.getctime)
+    # print(len(list_of_files))
+
+    
+    
+    # creating a pdf reader object 
+    reader = PdfReader(latest_file) 
+    
+    # printing number of pages in pdf file 
+    
+    
+    # getting a specific page from the pdf file 
+    text = ''
+    for i in range(0, len(reader.pages)):
+        page = reader.pages[i]
+        page_text = page.extract_text()
+        # extracting text from page 
+        text = text + page_text
+
+    try:
+        lines = text.splitlines()
+        ubi_number = ''
+        business_name = ''
+        phone_number = ''
+        email = ''
+        address = ''
+        first_name = ''
+        last_name = ''
+        for i in range(len(lines)):
+            if 'UBI Number:' in lines[i]:  # Case-sensitive match
+                if i + 1 < len(lines):
+                    if is_contains_number(lines[i + 1]):
+                        ubi_number = lines[i + 1]
+            if 'Business Name' in lines[i]: 
+                if i + 1 < len(lines):
+                    business_name = lines[i + 1]
+            if 'Phone:' in lines[i]:
+                if i + 1 < len(lines):
+                    if is_contains_number(lines[i + 1]):
+                        phone_number = lines[i + 1]
+            if 'Email:' in lines[i] and email == '':
+                if i + 1 < len(lines):
+                    if is_email_format(lines[i + 1]):
+                        email = lines[i + 1]
+            if 'Street Address:' in lines[i]:
+                if i + 1 < len(lines):
+                    address = lines[i + 1]
+            if 'First Name:' in lines[i]:
+                if i + 1 < len(lines):
+                    first_name = lines[i + 1]
+            if 'Last Name:' in lines[i]:
+                if i + 1 < len(lines):
+                    last_name = lines[i + 1]
+        print(ubi_number + '  =======  ' + business_name + '  ==========  ' + phone_number + '  ==========  ' + email + '  =======  ' + address + '  ==========  ' + first_name + '  ==========  ' + last_name)
+    except Exception as e:
+        print(f"{e}")
     driver.back()
     time.sleep(3)
     driver.back()
