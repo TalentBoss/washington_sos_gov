@@ -106,29 +106,20 @@ pagination_ul = driver.find_element(By.CLASS_NAME, 'pagination') # the same as (
 # Find all the <li> elements inside the <ul> element
 pagination_lis = pagination_ul.find_elements(By.TAG_NAME, 'li')
 
-# a = driver.find_element(By.CSS_SELECTOR, 'ul.pagination li:nth-child('+f"{len(pagination_lis) - 1}" + ') a')
-# a.click()
-# time.sleep(4)
-# a.click()
-# time.sleep(4)
-
-
 table_element = driver.find_element(By.CSS_SELECTOR, 'table.table')
 table_trs = table_element.find_elements(By.CSS_SELECTOR, 'tbody tr')
 page_num_str = get_substring(page_span.text)
-if not page_num_str == None:
+if page_num_str is not None:
     page_num = int(page_num_str)
-    print(page_num)
-
-    for k in range(2, page_num - 1):
+    # print(page_num)
+    time.sleep(3)
+    for k in range(1, page_num - 1):
         try:
-            # if k > 0:
-            #     for p in range(0, k):
-            time.sleep(3)
-            pagination_lis[len(pagination_lis) - 2].click()
-            time.sleep(3)
-            pagination_lis[len(pagination_lis) - 2].click()
-
+            if k > 0:
+                # for p in range(k):
+                time.sleep(2)
+                pagination_lis[7].click()
+                
             for j in range(0, len(table_trs)-1):
                 table_element = driver.find_element(By.CSS_SELECTOR, 'table.table')
                 table_trs = table_element.find_elements(By.CSS_SELECTOR, 'tbody tr')
