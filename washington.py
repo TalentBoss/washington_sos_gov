@@ -10,6 +10,15 @@ import csv
 from datetime import datetime, timedelta
 import re
 
+
+import tkinter as tk
+from multiprocessing import freeze_support, Lock
+from multiprocessing.pool import ThreadPool
+from tkinter import filedialog as fd
+from tkinter import ttk
+
+import sv_ttk
+
 # import fitz 
 # doc = fitz.open('a.pdf') 
 # text = "" 
@@ -109,25 +118,30 @@ pagination_lis = pagination_ul.find_elements(By.TAG_NAME, 'li')
 table_element = driver.find_element(By.CSS_SELECTOR, 'table.table')
 table_trs = table_element.find_elements(By.CSS_SELECTOR, 'tbody tr')
 page_num_str = get_substring(page_span.text)
+
+# print(len(pagination_lis))
 if page_num_str is not None:
     page_num = int(page_num_str)
     # print(page_num)
-    time.sleep(3)
-    for k in range(1, page_num - 1):
+    time.sleep(2)
+    for k in range(2, page_num - 1):
         try:
             if k > 0:
-                # for p in range(k):
-                time.sleep(2)
-                pagination_lis[7].click()
-                
+                for p in range(k):
+                    nav = pagination_lis[-2].find_element(By.TAG_NAME, 'a')
+                    time.sleep(2)
+                    nav.click()
+                    time.sleep(2)
+            
             for j in range(0, len(table_trs)-1):
                 table_element = driver.find_element(By.CSS_SELECTOR, 'table.table')
                 table_trs = table_element.find_elements(By.CSS_SELECTOR, 'tbody tr')
-                time.sleep(1)
+                
                 table_tds = table_trs[j].find_element(By.CSS_SELECTOR, 'td a')
                 try:
+                    time.sleep(3)
                     table_tds.click()
-                    time.sleep(2)
+                    time.sleep(4)
                     history_btn = driver.find_element(By.ID, 'btnFilingHistory')
                     history_btn.click()
                     time.sleep(2)
@@ -228,8 +242,20 @@ if page_num_str is not None:
                     time.sleep(3)
                     driver.back()
                     time.sleep(3)
+                    # Find the <ul> element with class attribute "pagination"
+                    pagination_ul = driver.find_element(By.CLASS_NAME, 'pagination') # the same as (By.CSS_SELECTORS, 'ul.pagination')
+
+                    # Find all the <li> elements inside the <ul> element
+                    pagination_lis = pagination_ul.find_elements(By.TAG_NAME, 'li')
+                    if k > 0:
+                        for p in range(k):
+                            nav = pagination_lis[-2].find_element(By.TAG_NAME, 'a')
+                            time.sleep(2)
+                            nav.click()
+                            time.sleep(2)
                 except Exception as e:
                     print(f"{e}")
+                    
         except Exception as e:
             print(f"{e}")
         
@@ -246,6 +272,27 @@ if page_num_str is not None:
             writer.writeheader()
             for item in total_results:
                 writer.writerow(item)
-# for i in range(4):
-#     time.sleep(3)
-#     pagination_lis[len(pagination_lis) - 2].click()
+
+
+# if __name__ == '__main__':
+#     freeze_support()
+
+#     app = tk.Tk()
+#     app.title(f'Washington Website Scraper')
+#     app.geometry('400x400')
+#     app.minsize(400, 400)
+#     app.maxsize(400, 400)
+
+#     ttk.Frame(app, height=30).pack()
+#     title = tk.Label(app, text='Washington Website Scraper', font=("Calibri", 24, "bold"))
+#     title.pack(pady=20)
+
+#     startbot = ttk.Button(app, text='Start Bot', style='Accent.TButton', width=15,
+#                           command=lambda: main())
+#     startbot.pack(pady=10)
+
+#     info_text = ttk.Label(app, text='', justify=tk.CENTER)
+#     info_text.pack(pady=5)
+
+#     sv_ttk.set_theme('dark')
+#     app.mainloop()
