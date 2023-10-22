@@ -58,7 +58,7 @@ def get_substring(string):
     else:
         return None
 
-
+total_results = []
 # configure webdriver
 options = Options()
 options.headless = True  # hide GUI
@@ -123,100 +123,139 @@ if not page_num_str == None:
 #     time.sleep(3)
 #     pagination_lis[len(pagination_lis) - 2].click()
 
-# for k in range(0, len(pagination_lis)):
-# for j in range(0, len(table_trs)-1):
-#     table_element = driver.find_element(By.CSS_SELECTOR, 'table.table')
-#     table_trs = table_element.find_elements(By.CSS_SELECTOR, 'tbody tr')
-#     time.sleep(1)
-#     table_tds = table_trs[j].find_element(By.CSS_SELECTOR, 'td a')
-#     try:
-#         table_tds.click()
-#         time.sleep(2)
-#         history_btn = driver.find_element(By.ID, 'btnFilingHistory')
-#         history_btn.click()
-#         time.sleep(2)
-#         pdf_table = driver.find_elements(By.CSS_SELECTOR, 'table.table')
-#         pdf_table_tbody = pdf_table[0].find_element(By.CSS_SELECTOR, 'tbody')
-#         pdf_table_trs = pdf_table_tbody.find_elements(By.CSS_SELECTOR, 'tr')
-#         pdf_table_tds = pdf_table_trs[len(pdf_table_trs) - 1].find_elements(By.CSS_SELECTOR, 'td')
-#         view_pdf_a = pdf_table_tds[len(pdf_table_tds) - 1].find_element(By.TAG_NAME, 'a')
-#         time.sleep(1)
-#         view_pdf_a.click()
-#         time.sleep(4)
-        
-#         final_pdf_table_tbodies = pdf_table[1].find_elements(By.CSS_SELECTOR, 'tbody')
-#         final_pdf_table_trs = final_pdf_table_tbodies[len(final_pdf_table_tbodies) - 2].find_elements(By.CSS_SELECTOR, 'tr')
-#         final_pdf_table_tds = final_pdf_table_trs[len(final_pdf_table_trs) - 1].find_elements(By.CSS_SELECTOR, 'td')
-#         final_pdf_table_i = final_pdf_table_tds[len(final_pdf_table_tds) - 1].find_element(By.TAG_NAME, 'i')
-#         time.sleep(2)
-#         final_pdf_table_i.click()
-#         time.sleep(4)
-        
-        
-#         list_of_files = glob.glob('C:/Users/Christian/Downloads/*') # * means all if need specific format then *.csv
-#         latest_file = max(list_of_files, key=os.path.getctime)
-#         # print(len(list_of_files))
+    for k in range(0, page_num - 1):
+        try:
+            if k > 0:
+                for p in range(0, k):
+                    time.sleep(3)
+                    pagination_lis[len(pagination_lis) - 2].click()
 
-        
-        
-#         # creating a pdf reader object 
-#         reader = PdfReader(latest_file) 
-        
-#         # printing number of pages in pdf file 
-        
-        
-#         # getting a specific page from the pdf file 
-#         text = ''
-#         for i in range(0, len(reader.pages)):
-#             page = reader.pages[i]
-#             page_text = page.extract_text()
-#             # extracting text from page 
-#             text = text + page_text
+            for j in range(0, len(table_trs)-1):
+                table_element = driver.find_element(By.CSS_SELECTOR, 'table.table')
+                table_trs = table_element.find_elements(By.CSS_SELECTOR, 'tbody tr')
+                time.sleep(1)
+                table_tds = table_trs[j].find_element(By.CSS_SELECTOR, 'td a')
+                try:
+                    table_tds.click()
+                    time.sleep(2)
+                    history_btn = driver.find_element(By.ID, 'btnFilingHistory')
+                    history_btn.click()
+                    time.sleep(2)
+                    pdf_table = driver.find_elements(By.CSS_SELECTOR, 'table.table')
+                    pdf_table_tbody = pdf_table[0].find_element(By.CSS_SELECTOR, 'tbody')
+                    pdf_table_trs = pdf_table_tbody.find_elements(By.CSS_SELECTOR, 'tr')
+                    pdf_table_tds = pdf_table_trs[len(pdf_table_trs) - 1].find_elements(By.CSS_SELECTOR, 'td')
+                    view_pdf_a = pdf_table_tds[len(pdf_table_tds) - 1].find_element(By.TAG_NAME, 'a')
+                    time.sleep(1)
+                    view_pdf_a.click()
+                    time.sleep(4)
+                    
+                    final_pdf_table_tbodies = pdf_table[1].find_elements(By.CSS_SELECTOR, 'tbody')
+                    final_pdf_table_trs = final_pdf_table_tbodies[len(final_pdf_table_tbodies) - 2].find_elements(By.CSS_SELECTOR, 'tr')
+                    final_pdf_table_tds = final_pdf_table_trs[len(final_pdf_table_trs) - 1].find_elements(By.CSS_SELECTOR, 'td')
+                    final_pdf_table_i = final_pdf_table_tds[len(final_pdf_table_tds) - 1].find_element(By.TAG_NAME, 'i')
+                    time.sleep(2)
+                    final_pdf_table_i.click()
+                    time.sleep(4)
 
-#         try:
-#             lines = text.splitlines()
-#             ubi_number = ''
-#             business_name = ''
-#             phone_number = ''
-#             email = ''
-#             address = ''
-#             first_name = ''
-#             last_name = ''
-#             for i in range(len(lines)):
-#                 if 'UBI Number:' in lines[i]:  # Case-sensitive match
-#                     if i + 1 < len(lines):
-#                         if is_contains_number(lines[i + 1]):
-#                             ubi_number = lines[i + 1]
-#                 if 'Business Name' in lines[i]: 
-#                     if i + 1 < len(lines):
-#                         business_name = lines[i + 1]
-#                 if 'Phone:' in lines[i]:
-#                     if i + 1 < len(lines):
-#                         if is_contains_number(lines[i + 1]):
-#                             phone_number = lines[i + 1]
-#                 if 'Email:' in lines[i] and email == '':
-#                     if i + 1 < len(lines):
-#                         if is_email_format(lines[i + 1]):
-#                             email = lines[i + 1]
-#                 if 'Street Address:' in lines[i]:
-#                     if i + 1 < len(lines):
-#                         address = lines[i + 1]
-#                 if 'First Name:' in lines[i]:
-#                     if i + 1 < len(lines):
-#                         first_name = lines[i + 1]
-#                 if 'Last Name:' in lines[i]:
-#                     if i + 1 < len(lines):
-#                         last_name = lines[i + 1]
-#             print(ubi_number + '  =======  ' + business_name + '  ==========  ' + phone_number + '  ==========  ' + email + '  =======  ' + address + '  ==========  ' + first_name + '  ==========  ' + last_name)
-#         except Exception as e:
-#             print(f"{e}")
-#         driver.back()
-#         time.sleep(3)
-#         driver.back()
-#         time.sleep(3)
-#     except Exception as e:
-#         print(f"{e}")
+                    driver.refresh()                    
+                    list_of_files = glob.glob('C:/Users/Christian/Downloads/*') # * means all if need specific format then *.csv
+                    latest_file = max(list_of_files, key=os.path.getctime)
 
+                    # creating a pdf reader object 
+                    reader = PdfReader(latest_file) 
+                    
+                    # printing number of pages in pdf file 
+                    
+                    # getting a specific page from the pdf file 
+                    text = ''
+                    for i in range(0, len(reader.pages)):
+                        page = reader.pages[i]
+                        page_text = page.extract_text()
+                        # extracting text from page 
+                        text = text + page_text
+
+                    try:
+                        lines = text.splitlines()
+                        ubi_number = ''
+                        business_name = ''
+                        phone_number = ''
+                        email = ''
+                        address = ''
+                        first_name = ''
+                        last_name = ''
+                        for i in range(len(lines)):
+                            if 'UBI Number:' in lines[i]:  # Case-sensitive match
+                                if i + 1 < len(lines):
+                                    if is_contains_number(lines[i + 1]):
+                                        ubi_number = lines[i + 1]
+                            if 'Business Name' in lines[i]: 
+                                if i + 1 < len(lines):
+                                    business_name = lines[i + 1]
+                            if 'Phone:' in lines[i]:
+                                if i + 1 < len(lines):
+                                    if is_contains_number(lines[i + 1]):
+                                        phone_number = lines[i + 1]
+                            if 'Email:' in lines[i] and email == '':
+                                if i + 1 < len(lines):
+                                    if is_email_format(lines[i + 1]):
+                                        email = lines[i + 1]
+                            if 'Street Address:' in lines[i]:
+                                if i + 1 < len(lines):
+                                    address = lines[i + 1]
+                            if 'First Name:' in lines[i]:
+                                if i + 1 < len(lines):
+                                    first_name = lines[i + 1]
+                            if 'Last Name:' in lines[i]:
+                                if i + 1 < len(lines):
+                                    last_name = lines[i + 1]
+                        print(ubi_number + '  =======  ' + business_name + '  ==========  ' + phone_number + '  ==========  ' + email + '  =======  ' + address + '  ==========  ' + first_name + '  ==========  ' + last_name)
+                        one_item = {}
+                        one_item["ubi_number"] = ubi_number
+                        one_item["business_name"] = business_name
+                        one_item["phone_number"] = phone_number
+                        one_item["email"] = email
+                        one_item["address"] = address
+                        one_item["first_name"] = first_name
+                        one_item["last_name"] = last_name
+
+                        total_results.append(one_item)
+                        if len(total_results) > 24:
+                            current_datetime = datetime.datetime.now()
+                            csv_file = f"washington-{current_datetime.strftime('%d-%m-%Y %H_%M_%S')}.csv"
+
+                            with open(csv_file, mode="w", newline="", encoding="utf-8") as file:
+                                fieldnames = ["business_name", "ubi_number", "phone_number", "email", "address", "first_name", "last_name"]
+                                writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+                                writer.writeheader()
+                                for item in total_results:
+                                    writer.writerow(item)
+                            total_results = []
+                    except Exception as e:
+                        print(f"{e}")
+                    driver.back()
+                    time.sleep(3)
+                    driver.back()
+                    time.sleep(3)
+                except Exception as e:
+                    print(f"{e}")
+        except Exception as e:
+            print(f"{e}")
+        
+
+    # rest item less than 25
+    if len(total_results) > 0:
+        current_datetime = datetime.datetime.now()
+        csv_file = f"washington-{current_datetime.strftime('%d-%m-%Y %H_%M_%S')}.csv"
+
+        with open(csv_file, mode="w", newline="", encoding="utf-8") as file:
+            fieldnames = ["business_name", "ubi_number", "phone_number", "email", "address", "first_name", "last_name"]
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+            writer.writeheader()
+            for item in total_results:
+                writer.writerow(item)
 # for i in range(4):
 #     time.sleep(3)
 #     pagination_lis[len(pagination_lis) - 2].click()
