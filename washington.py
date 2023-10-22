@@ -119,16 +119,15 @@ page_num_str = get_substring(page_span.text)
 if not page_num_str == None:
     page_num = int(page_num_str)
     print(page_num)
-# for i in range(4):
-#     time.sleep(3)
-#     pagination_lis[len(pagination_lis) - 2].click()
 
-    for k in range(0, page_num - 1):
+    for k in range(2, page_num - 1):
         try:
-            if k > 0:
-                for p in range(0, k):
-                    time.sleep(3)
-                    pagination_lis[len(pagination_lis) - 2].click()
+            # if k > 0:
+            #     for p in range(0, k):
+            time.sleep(3)
+            pagination_lis[len(pagination_lis) - 2].click()
+            time.sleep(3)
+            pagination_lis[len(pagination_lis) - 2].click()
 
             for j in range(0, len(table_trs)-1):
                 table_element = driver.find_element(By.CSS_SELECTOR, 'table.table')
